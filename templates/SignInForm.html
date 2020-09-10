@@ -1,0 +1,90 @@
+<!-- /templates/index.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='styles/styles.css') }}" />
+    <title>Art Supplies Tracker</title>
+</head>
+
+<body>
+    <ul>
+      <li><a href="/">Home</a></li>
+      <li><a href="/signoutform">Sign Out An Item</a></li>
+      <li><a class="active" href="/signinform">Sign In An Item</a></li>
+      <li style="float:right"><a href="/teacher">Teacher Verification</a></li>
+    </ul>
+    {%if pin_error%}
+    <script>
+        function unavailable() {
+            alert("The pin is incorrect. Please try again!");
+            window.location = "/signinform";
+        }
+        window.onload = unavailable();
+    </script>
+    {%endif%}
+    {%if qty_error%}
+    <script>
+        function unavailable() {
+            alert("The quantity entered is greater than the amount signed out! Please try again!");
+            window.location = "/signinform";
+        }
+        window.onload = unavailable();
+    </script>
+    {%endif%}
+    {%if signin_msg%}
+    <script>
+        function unavailable() {
+            alert("The item has been signed in!");
+            window.location = "/signinform";
+        }
+        window.onload = unavailable();
+    </script>
+    {%endif%}
+    <h1>Signed Out Items:</h1>
+        <table id="signedOut">
+        <tr>
+            <th>Item Name</th>
+            <th>Quantity Signed Out</th>
+            <th>Signed Out By</th>
+            <th>Time Item Was Signed Out</th>
+        </tr>
+        <tr>
+            {%for item in signed_out%}
+            {%if item.status == 'Approved'%}
+            <tr>
+                <td>{{item.supply}}</td>
+                <td>{{item.qty}}</td>
+                <td>{{item.name}}</td>
+                <td>{{item.time}}</td>
+            </tr>
+            {%endif%}
+            {%endfor%}
+        </tr>
+    </table>
+    <br />
+    <br />
+    
+<h1>Sign In an Item:</h1>
+<div>
+    <form action="/signinpost", method="post">
+        <label for="signedOutSupply">Supply: </label>
+        <select id="signedOutSupply" name="signedOutSupply" required>
+            <option value="">---</option>
+            {%for item in signed_out%}
+            {%if item.status == 'Approved'%}
+            <option value="{{item.id}}">{{item.supply}} signed out by {{item.name}}</option>
+            {%endif%}
+            {%endfor%}
+        </select>
+        <br />
+        <label for="qty">Quantity</label>
+        <input type="number" id="qty" name="qty" required placeholder="0">
+        <br />
+        <label for="pin">Pin</label>
+        <input type="number" id="pin" name="pin" required placeholder="0000">
+        <br />
+        <input type="submit">
+        </form>
+</div>
+</body>
+</html>

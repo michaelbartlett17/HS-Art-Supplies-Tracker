@@ -1,0 +1,63 @@
+<!-- /templates/index.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='styles/styles.css') }}" />
+    <title>Art Supplies Tracker</title>
+</head>
+
+<body>
+    <ul>
+      <li><a href="/">Home</a></li>
+      <li><a class="active" href="/signoutform">Sign Out An Item</a></li>
+      <li><a href="/signinform">Sign In An Item</a></li>
+      <li style="float:right"><a href="/teacher">Teacher Verification</a></li>
+    </ul>
+    {%if error%}
+    <script>
+        function unavailable() {
+            alert("The amount of items requested is unavailable. Please try again!");
+            window.location = "/signoutform"
+        }
+        window.onload = unavailable();
+    </script>
+    {%endif%}
+    <h1>Available Items:</h1>
+    <table id="available">
+        <tr>
+            <th>Item Name</th>
+            <th>Quantity Available</th>
+        </tr>
+        <tr>
+            {%for item in available%}
+            <tr>
+                <td>{{item.supply}}</td>
+                <td>{{item.qty}}</td>
+            </tr>
+            {%endfor%}
+        </tr>
+    </table>
+    <br />
+    <br />
+    
+<h1>Sign Out An Item:</h1>
+<div>
+    <form action="/post", method="post">
+        <input type="text" id="name" name="name" required placeholder="First and Last Name">
+        <br />
+        <input type="email" id="email" name="email" required placeholder="email@example.com">
+        <br />
+        <select id="supply" name="supply" required>
+            <option value="">Choose a Supply</option>
+            {%for item in available%}
+            <option value="{{item.supply}}">{{item.supply}}</option>
+            {%endfor%}
+        </select>
+        <br />
+        <input type="number" id="qty" name="qty" required placeholder="Quantity">
+        <br />
+        <input type="submit">
+        </form>
+</div>
+</body>
+</html>

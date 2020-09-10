@@ -1,0 +1,90 @@
+<!-- /templates/index.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='styles/styles.css') }}" />
+    <title>Art Supplies Tracker</title>
+</head>
+
+<body>
+    <ul>
+      <li><a href="/">Home</a></li>
+      <li><a href="/signoutform">Sign Out An Item</a></li>
+      <li><a href="/signinform">Sign In An Item</a></li>
+      <li style="float:right"><a class="active" href="/teacher">Teacher Verification</a></li>
+    </ul>    
+
+    <h1>Pending Items:</h1>
+     <table id="signedOut">
+        <tr>
+            <th>Item Name</th>
+            <th>Quantity Signed Out</th>
+            <th>Signed Out By</th>
+            <th>Time Item Was Signed Out</th>
+            <th>Status</th>
+            <th>Approve Request?</th>
+        </tr>
+        <tr>
+            {%for item in signed_out%}
+            {%if item.status == 'Pending'%}
+            <tr>
+                <td>{{item.supply}}</td>
+                <td>{{item.qty}}</td>
+                <td>{{item.name}}</td>
+                <td>{{item.time}}</td>
+                <td>{{item.status}}</td>
+                <td>
+                    <form action="/approve" method="post">
+                        <button name="approve" value="{{item.id}}">Approve</button>
+                    </form>
+                </td>
+            </tr>
+            {%endif%}
+            {%endfor%}
+        </tr>
+    </table>
+    
+        <h1>Approved Items:</h1>
+        <table id="signedOut">
+        <tr>
+            <th>Item Name</th>
+            <th>Quantity Signed Out</th>
+            <th>Signed Out By</th>
+            <th>Time Item Was Signed Out</th>
+            <th>Status</th>
+        </tr>
+        <tr>
+            {%for item in signed_out%}
+            {%if item.status == 'Approved'%}
+            <tr>
+                <td>{{item.supply}}</td>
+                <td>{{item.qty}}</td>
+                <td>{{item.name}}</td>
+                <td>{{item.time}}</td>
+                <td>{{item.status}}</td>
+            </tr>
+            {%endif%}
+            {%endfor%}
+        </tr>
+    </table>
+    
+    <h1>Available Items:</h1>
+    <table id="available">
+        <tr>
+            <th>Item Name</th>
+            <th>Quantity Available</th>
+        </tr>
+        <tr>
+            {%for item in available%}
+            <tr>
+                <td>{{item.supply}}</td>
+                <td>{{item.qty}}</td>
+            </tr>
+            {%endfor%}
+        </tr>
+    </table>
+    <br />
+    <br />
+    
+</body>
+</html>
